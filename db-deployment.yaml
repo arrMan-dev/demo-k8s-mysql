@@ -1,0 +1,82 @@
+#1 . PERSISTENCE VOLUME CLAIM for MySQL
+apiVersion: v1
+kind: PersistentVolumeClaim # 'PVC' for MySQL storage, dynamically provisioned by cluster
+metadata:
+  name: mysql-pv-claim #'PVC' to identify the storage data
+  labels:
+    app: mysql
+    tier: database
+
+spec:
+  accessModes:
+    - ReadWriteOnce # specifies the mode of data creation
+  resources:
+    requests:
+      storage: 1Gi #tells k8s amount space allow for that claim
+---
+#2 . MYSQL server configuration for the deployment in k8s
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+    tier: database
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+      tier: database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+        tier: database
+    spec:
+      containers:
+        - image: mysql:5.7
+          name: mysql
+          env:
+            # Use secret in real usage
+            - name: MYSQL_ROOT_PASSWORD
+              value: Believeingod01!
+            - name: MYSQL_DATABASE
+              value: test_db
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+    tier: database
+
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: mysql
+    tier: database
+  clusterIP: None
+
+
+
+
+
+
+
+
+
