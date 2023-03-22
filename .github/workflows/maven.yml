@@ -27,13 +27,8 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
         cache: maven
-#    - name: Set up MySQL 5.7
-#      withmysql-action@master
-#        with:
-#          mysql version: 5.7
-#          mysql database: test
-#          mysql root password: ${{ secrets.DatabasePassword }}
     - name: Set up MySQL 5.7
+      run: mysql -u root -p
       with:
         mysql version: 5.7
         mysql database: test_db
