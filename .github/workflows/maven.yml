@@ -29,7 +29,6 @@ jobs:
         cache: maven
     - name: Set up MySQL 5.7
       run: mysql -u root -p
-      password: ${{DB_PASSWORD}}
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
