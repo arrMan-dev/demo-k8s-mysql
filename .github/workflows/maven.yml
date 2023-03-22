@@ -28,11 +28,14 @@ jobs:
         distribution: 'adopt'
         cache: maven
     - name: Set up MySQL 5.7
+      uses: arrMan-dev/demo-k8s-mysql@master
       run: mysql -u root -p
       with:
+        username: ${{DB_USERNAME}}
+        password: ${{DB_PASSWORD}}
         mysql version: 5.7
         mysql database: test_db
-        mysql root password: ${{secrets.DB_PASSWORD}}
+
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - run: mkdir staging && cp target/*jar-with-dependencies.jar staging
