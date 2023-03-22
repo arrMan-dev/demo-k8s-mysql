@@ -58,6 +58,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>demo-k8s</finalName>
 	</build>
 
 </project>
